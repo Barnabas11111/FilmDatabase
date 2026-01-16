@@ -22,3 +22,4 @@ class FilmDatabase:
 
     def delete_rows_with_param(self,param):
         self.cursor.execute("DELETE FROM film WHERE nev LIKE ?",(param,))
+
