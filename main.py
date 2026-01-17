@@ -28,6 +28,6 @@ films=film_database.show_all()
 
 root=FilmGui()
 
-root.label_generator("Név","Kiadás Dátuma(évben)", "Rendező", "Műfaj")
+root.together("Név","Kiadás Dátuma(évben)", "Rendező", "Műfaj")
 
 root.mainloop()
