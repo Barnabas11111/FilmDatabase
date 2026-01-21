@@ -22,11 +22,13 @@ CREATE TABLE IF NOT EXISTS film
 conn.commit()
 
 
+
+
+
+
+root=FilmGui(db_path)
 film_database=FilmDatabase(db_path)
 
-films=film_database.show_all()
-
-root=FilmGui()
 
 root.together("Név","Kiadás Dátuma(évben)", "Rendező", "Műfaj")
 
