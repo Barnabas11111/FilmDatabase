@@ -30,6 +30,6 @@ root=FilmGui(db_path)
 film_database=FilmDatabase(db_path)
 
 
-root.together("Név","Kiadás Dátuma(évben)", "Rendező", "Műfaj")
+root.together()
 
 root.mainloop()

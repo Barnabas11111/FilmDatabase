@@ -5,6 +5,13 @@ from film import *
 
 class FilmGui:
     def __init__(self,database):
+
+        self.mufaj_var = None
+        self.rendezo_var = None
+        self.datum_var = None
+        self.nev_var = None
+        self.check = None
+
         self.root=Tk()
         self.root.title("Film Database")
         self.root.geometry("500x400")
@@ -14,26 +21,41 @@ class FilmGui:
         self.root.rowconfigure(0,weight=0)
         self.film=FilmDatabase(database)
 
-    def label_generator(self,*args):
+    def main_window(self):
+
+
+        self.nev_var=StringVar()
+        self.datum_var=StringVar()
+        self.rendezo_var = StringVar()
+        self.mufaj_var = StringVar()
+
 
         ttk.Label(self.mainframe,text="Adja meg a filmnek az adatait",padding=(10,10)).grid(column=1,columnspan=2,row=0)
 
-        film_entrys=[]
-        variables=[]
-        for e,i in enumerate(args):
-            entrys=Variable()
-            variables.append(entrys)
-            entry=ttk.Entry(self.mainframe,textvariable=variables[e]).grid(column=1,row=e+1,padx=10,pady=10)
+        ttk.Entry(self.mainframe,textvariable=self.nev_var).grid(column=1,row=1,pady=10)
+        ttk.Label(self.mainframe,text="Név").grid(column=2,row=1)
 
-            ttk.Label(self.mainframe,text=i).grid(column=2,row=e+1)
+        ttk.Entry(self.mainframe,textvariable=self.datum_var).grid(column=1,row=2,pady=10)
+        ttk.Label(self.mainframe,text="Kiadás Dátuma(évben)").grid(column=2,row=2)
 
-        check=IntVar(value=0)
-        ttk.Checkbutton(self.mainframe,text="Megnézve",variable=check).grid(column=2,row=len(args)+1,columnspan=2)
-        film_entrys.append(check.get())
-        self.put_films(film_entrys)
+        ttk.Entry(self.mainframe,textvariable=self.rendezo_var).grid(column=1,row=3,pady=10)
+        ttk.Label(self.mainframe,text="Rendező").grid(column=2,row=3)
 
-    def put_films(self,film_entrys):
-        ttk.Button(self.mainframe,text="Insert Film",command=lambda:self.film.insert_users(*film_entrys)).grid(column=0,row=6)
+        ttk.Entry(self.mainframe,textvariable=self.mufaj_var).grid(column=1,row=4,pady=10)
+        ttk.Label(self.mainframe,text="Műfaj").grid(column=2,row=4)
+
+        self.check=BooleanVar()
+        ttk.Checkbutton(self.mainframe,text="Megnézve",variable=self.check).grid(column=2,row=5,columnspan=2)
+
+
+
+        ttk.Button(self.mainframe,text="Insert Film",command=lambda:self.film.insert_users(*self.put_film_vars_to_list())).grid(column=0,row=6)
+
+    def put_film_vars_to_list(self):
+        film_list=[]
+        for i in (self.nev_var,self.datum_var,self.rendezo_var,self.mufaj_var,self.check):
+            film_list.append(i.get())
+        return film_list
 
     def mainwindow_button(self):
         ttk.Button(self.mainframe,text="Listázd az összes filmet",command=lambda :self.show_all_window()).grid(column=1,columnspan=2,row=6)
@@ -76,7 +98,7 @@ class FilmGui:
 
     def together(self,*args):
 
-        self.label_generator(*args)
+        self.main_window()
         self.mainwindow_button()
 
     def mainloop(self):
