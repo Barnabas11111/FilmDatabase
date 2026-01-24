@@ -2,7 +2,6 @@ from tkinter import *
 from tkinter import ttk
 from film import *
 
-
 class FilmGui:
     def __init__(self,database):
 
@@ -23,12 +22,10 @@ class FilmGui:
 
     def main_window(self):
 
-
         self.nev_var=StringVar()
         self.datum_var=StringVar()
         self.rendezo_var = StringVar()
         self.mufaj_var = StringVar()
-
 
         ttk.Label(self.mainframe,text="Adja meg a filmnek az adatait",padding=(10,10)).grid(column=1,columnspan=2,row=0)
 
@@ -36,7 +33,7 @@ class FilmGui:
         ttk.Label(self.mainframe,text="Név").grid(column=2,row=1)
 
         ttk.Entry(self.mainframe,textvariable=self.datum_var).grid(column=1,row=2,pady=10)
-        ttk.Label(self.mainframe,text="Kiadás Dátuma(évben)").grid(column=2,row=2)
+        ttk.Label(self.mainframe,text="Kiadás Dátuma(évben)").grid(column=2,row=2,padx=10)
 
         ttk.Entry(self.mainframe,textvariable=self.rendezo_var).grid(column=1,row=3,pady=10)
         ttk.Label(self.mainframe,text="Rendező").grid(column=2,row=3)
@@ -47,19 +44,20 @@ class FilmGui:
         self.check=BooleanVar()
         ttk.Checkbutton(self.mainframe,text="Megnézve",variable=self.check).grid(column=2,row=5,columnspan=2)
 
+        ttk.Button(self.mainframe,text="Insert Film",command=lambda:self.film.insert_users(*self.put_film_vars_to_list())).grid(column=0,columnspan=2,row=6)
 
-
-        ttk.Button(self.mainframe,text="Insert Film",command=lambda:self.film.insert_users(*self.put_film_vars_to_list())).grid(column=0,row=6)
+        ttk.Button(self.mainframe, text="Film keresése").grid(column=1, row=7)
 
     def put_film_vars_to_list(self):
         film_list=[]
         for i in (self.nev_var,self.datum_var,self.rendezo_var,self.mufaj_var,self.check):
             film_list.append(i.get())
+            i.__del__()
+        self.check.set(value=0)
         return film_list
 
     def mainwindow_button(self):
-        ttk.Button(self.mainframe,text="Listázd az összes filmet",command=lambda :self.show_all_window()).grid(column=1,columnspan=2,row=6)
-
+        ttk.Button(self.mainframe,text="Listázd az összes filmet",command=lambda :self.show_all_window()).grid(column=2,columnspan=2,row=6)
 
     def show_all_window(self):
         new_window=Toplevel()
@@ -88,19 +86,17 @@ class FilmGui:
             tree.heading(col, text=text)
             tree.column(col, anchor="center", width=100)
 
-
-        tree.grid(column=0, row=0, sticky="new")
+        tree.grid(column=0, row=0, sticky="nesw")
         rows=self.film.show_all()
         for i in rows:
             tree.insert("","end",values=i)
 
-        ttk.Button(new_window,text="Vissza",command=lambda :new_window.destroy()).grid(column=0,row=1,pady=100)
+        ttk.Button(new_window,text="Vissza",command=lambda :new_window.destroy()).grid(column=0,row=2,pady=100)
 
-    def together(self,*args):
+    def together(self):
 
         self.main_window()
         self.mainwindow_button()
 
     def mainloop(self):
         self.root.mainloop()
-
