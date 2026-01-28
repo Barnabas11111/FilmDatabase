@@ -1,5 +1,7 @@
 from tkinter import *
 from tkinter import ttk
+from types import new_class
+
 from film import *
 
 class FilmGui:
@@ -46,7 +48,7 @@ class FilmGui:
 
         ttk.Button(self.mainframe,text="Insert Film",command=lambda:self.film.insert_users(*self.put_film_vars_to_list())).grid(column=0,columnspan=2,row=6)
 
-        ttk.Button(self.mainframe, text="Film keresése").grid(column=1, row=7)
+        ttk.Button(self.mainframe, text="Film keresése",command=lambda :self.search_window()).grid(column=1, row=7)
 
     def put_film_vars_to_list(self):
         film_list=[]
@@ -57,9 +59,9 @@ class FilmGui:
         return film_list
 
     def mainwindow_button(self):
-        ttk.Button(self.mainframe,text="Listázd az összes filmet",command=lambda :self.show_all_window()).grid(column=2,columnspan=2,row=6)
+        ttk.Button(self.mainframe,text="Listázd az összes filmet",command=lambda :self.show_all_window(self.film.show_all())).grid(column=2,columnspan=2,row=6)
 
-    def show_all_window(self):
+    def show_all_window(self,inputted):
         new_window=Toplevel()
         new_window.geometry("600x500")
         new_window.title("Az összes film listázva")
@@ -87,14 +89,42 @@ class FilmGui:
             tree.column(col, anchor="center", width=100)
 
         tree.grid(column=0, row=0, sticky="nesw")
-        rows=self.film.show_all()
+        rows=inputted
         for i in rows:
             tree.insert("","end",values=i)
 
         ttk.Button(new_window,text="Vissza",command=lambda :new_window.destroy()).grid(column=0,row=2,pady=100)
 
-    def together(self):
+    def search_window(self):
+        new_window=Toplevel()
+        new_window.title("Film keresése")
+        new_window.geometry("500x500")
+        new_window.columnconfigure(0,weight=1)
+        new_window.columnconfigure(1,weight=2)
+        new_window.rowconfigure(0,weight=1)
+        new_window.rowconfigure(1,weight=2)
 
+        name_entry=StringVar()
+        ttk.Entry(new_window,textvariable=name_entry).grid(column=0,row=0,sticky="e",padx=50)
+        combo = ttk.Combobox(new_window, values=["Név", "Rendező", "Műfaj"],state="readonly")
+        combo.grid(column=1,row=0)
+        combo.set("Válassz")
+
+        ttk.Button(new_window,text="Keresés",command=lambda :self.show_all_window(self.film.show_by_name(self.__combobox_helper(combo),name_entry.get()))).grid(column=0,row=1)
+        ttk.Button(new_window,text="Vissza",command=lambda :new_window.destroy()).grid(column=1,row=1)
+
+    def __combobox_helper(self,combo):
+        combo_value=combo.get()
+        value = ""
+        if combo_value == "Rendező":
+            value = "rendezo"
+        elif combo_value == "Név":
+            value = "nev"
+        elif combo_value == "Műfaj":
+            value = "mufaj"
+        return value
+
+    def together(self):
         self.main_window()
         self.mainwindow_button()
 

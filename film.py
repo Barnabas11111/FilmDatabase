@@ -6,7 +6,6 @@ class FilmDatabase:
         self.conn=sqlite3.connect(database)
         self.cursor=self.conn.cursor()
 
-
     def insert_users(self,name: str, release_year: int, director: str, genre: str, watched: int = 0):
 
         try:
@@ -20,6 +19,11 @@ class FilmDatabase:
         rows = self.cursor.fetchall()
         return rows
 
+    def show_by_name(self,table_name,variable_name):
+        self.cursor.execute(f"SELECT * from film WHERE {table_name} LIKE ?",(variable_name,))
+        rows=self.cursor.fetchall()
+        print(rows)
+        return rows
+
     def delete_rows_with_param(self,param):
         self.cursor.execute("DELETE FROM film WHERE nev LIKE ?",(param,))
-

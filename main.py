@@ -21,15 +21,10 @@ CREATE TABLE IF NOT EXISTS film
 
 conn.commit()
 
-
-
-
-
-
 root=FilmGui(db_path)
 film_database=FilmDatabase(db_path)
 
-
 root.together()
+
 
 root.mainloop()
