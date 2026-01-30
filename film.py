@@ -25,5 +25,16 @@ class FilmDatabase:
         print(rows)
         return rows
 
-    def delete_rows_with_param(self,param):
-        self.cursor.execute("DELETE FROM film WHERE nev LIKE ?",(param,))
+    def delete_rows_with_param(self,table_name,variable_name):
+        query = f"DELETE FROM film WHERE {table_name} LIKE ?"
+        self.cursor.execute(query, (f"%{variable_name}%",))
+        self.conn.commit()
+
+    def delete_null_rows(self):
+        query="DELETE FROM film WHERE nev IS NULL"
+        self.cursor.execute(query)
+        self.conn.commit()
+
+    def delete_combined(self,table_name,variable_name):
+        self.delete_rows_with_param(table_name,variable_name)
+        self.delete_null_rows()

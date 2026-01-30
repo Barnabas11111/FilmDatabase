@@ -19,7 +19,7 @@ class FilmGui:
         self.mainframe=ttk.Frame(self.root)
         self.mainframe.grid(column=0,row=0)
         self.root.columnconfigure(0,weight=1)
-        self.root.rowconfigure(0,weight=0)
+        self.root.rowconfigure(0,weight=1)
         self.film=FilmDatabase(database)
 
     def main_window(self):
@@ -49,6 +49,8 @@ class FilmGui:
         ttk.Button(self.mainframe,text="Insert Film",command=lambda:self.film.insert_users(*self.put_film_vars_to_list())).grid(column=0,columnspan=2,row=6)
 
         ttk.Button(self.mainframe, text="Film keresése",command=lambda :self.search_window()).grid(column=1, row=7)
+
+        ttk.Button(self.mainframe,text="Film törlése",command=lambda :self.delete_window()).grid(column=2,row=7)
 
     def put_film_vars_to_list(self):
         film_list=[]
@@ -104,13 +106,13 @@ class FilmGui:
         new_window.rowconfigure(0,weight=1)
         new_window.rowconfigure(1,weight=2)
 
-        name_entry=StringVar()
-        ttk.Entry(new_window,textvariable=name_entry).grid(column=0,row=0,sticky="e",padx=50)
+        search_entry=StringVar()
+        ttk.Entry(new_window,textvariable=search_entry).grid(column=0,row=0,sticky="e",padx=50)
         combo = ttk.Combobox(new_window, values=["Név", "Rendező", "Műfaj"],state="readonly")
         combo.grid(column=1,row=0)
         combo.set("Válassz")
 
-        ttk.Button(new_window,text="Keresés",command=lambda :self.show_all_window(self.film.show_by_name(self.__combobox_helper(combo),name_entry.get()))).grid(column=0,row=1)
+        ttk.Button(new_window,text="Keresés",command=lambda :self.show_all_window(self.film.show_by_name(self.__combobox_helper(combo),search_entry.get()))).grid(column=0,row=1)
         ttk.Button(new_window,text="Vissza",command=lambda :new_window.destroy()).grid(column=1,row=1)
 
     def __combobox_helper(self,combo):
@@ -123,6 +125,24 @@ class FilmGui:
         elif combo_value == "Műfaj":
             value = "mufaj"
         return value
+
+    def delete_window(self):
+        new_window=Tk()
+        new_window.geometry("500x500")
+        new_window.title("Film törlése")
+        new_window.columnconfigure(0,weight=1)
+        new_window.columnconfigure(1,weight=1)
+        new_window.rowconfigure(0,weight=1)
+        new_window.rowconfigure(1,weight=1)
+
+        delete_entry=StringVar()
+        ttk.Entry(new_window,textvariable=delete_entry).grid(column=0,row=0)
+        combo=ttk.Combobox(new_window,values=["Név","Műfaj"],state="readonly")
+        combo.grid(column=1,row=0)
+        combo.set("Válassz")
+
+        ttk.Button(new_window,text="Vissza",command=lambda :new_window.destroy()).grid(column=0,row=1)
+        ttk.Button(new_window,text="Film törlése",command=lambda :self.film.delete_combined(self.__combobox_helper(combo),delete_entry.get())).grid(column=1,row=1)
 
     def together(self):
         self.main_window()

@@ -26,5 +26,4 @@ film_database=FilmDatabase(db_path)
 
 root.together()
 
-
 root.mainloop()
